@@ -2,8 +2,8 @@
 #include "../include/Review.h"
 
 
-const int N = 100;
-const int M = 10000;
+const int N = 1000;
+const int M = 100000;
 
 struct statisticSearch
 {
@@ -78,13 +78,13 @@ struct statisticBTree
     }
 };
 
-statisticSearch searchRbTree(RedBlackTree* tree, string name)
+statisticSearch searchRbTree(RedBlackTree* tree, string key)
 {
     Timer* timer = new Timer();
     int* counter = new int();
 
     timer->start();
-    Node* node = tree->search(name, counter);
+    Node* node = tree->search(key, counter);
 
     double time_spent = timer->stop().count();
     Data result = Data();
@@ -125,18 +125,16 @@ statisticRbTree handlerTestRbTree()
     return statisticRbTree(searchResult.nComparer, searchResult.time_spent, time_search, searchResult.result);
 }
 
-/* ------------------- Arvore B -------------------- */
-
-statisticSearch searchBTree(BTree* Btree, string id)
+statisticSearch searchBTree(BTree* Btree, string key)
 {
     Timer* timer = new Timer();
     int* counter = new int();
 
     timer->start();
-    BTreeNode* node = Btree->search(id, counter);
+    BTreeNode* node = Btree->search(key, counter);
 
     int i = 0;
-    while (node->getKeys(i).id != id && i < node->getN())
+    while (node->getKeys(i).id != key && i < node->getN())
     {
         i++;
     }
@@ -324,12 +322,12 @@ void MenuTrees::startRb()
     {
         statisticRbTree data = handlerTestRbTree();
         statisticOutput(data, i + 1);
-        reviewOutput(data.result.position);
+        reviewOutput(data.result.pos);
         list.push_back(data);
     }
 
     statisticRbTree mean = CalcMean(list);
-    meanPrintOutput(mean);
+    meanOutput(mean);
 }
 
 void MenuTrees::startB()
@@ -339,7 +337,7 @@ void MenuTrees::startB()
     arq.close();
 
     arq.open("saida.txt", ios::app);
-    arq << "------------------------------ Arbore B ------------------------------" << endl
+    arq << "|      -------------   Arbore B   -------------      |" << endl
         << endl
         << "Teste para t = 20: "
         << endl
@@ -350,10 +348,10 @@ void MenuTrees::startB()
     for (int i = 0; i < 5; i++)
     {
         int test1 = 20;
-        statisticBTree dataB = handlerTestBTree(test1);
-        statisticOutput(dataB, i + 1);
-        reviewOutput(dataB.result.position);
-        listB.push_back(dataB);
+        statisticBTree infoB = handlerTestBTree(test1);
+        statisticOutput(infoB, i + 1);
+        reviewOutput(infoB.result.pos);
+        listB.push_back(infoB);
     }
 
     statisticBTree meanB = CalcMeanB(listB);
@@ -370,7 +368,7 @@ void MenuTrees::startB()
         int test2 = 200;
         statisticBTree dataB2 = handlerTestBTree(test2);
         statisticOutput(dataB2, i + 1);
-        reviewOutput(dataB2.result.position);
+        reviewOutput(dataB2.result.pos);
         listB2.push_back(dataB2);
     }
 
@@ -381,7 +379,7 @@ void MenuTrees::startB()
 void MenuTrees::modTestRb()
 {
     RedBlackTree tree = RedBlackTree();
-    string nome;
+    string key;
 
     double time_index = indexRbTree(&tree, 50);
     cout << endl << "-*- Mod teste -*-" << endl;
@@ -389,15 +387,15 @@ void MenuTrees::modTestRb()
     tree.order();
 
     cout << endl
-        << "Digite o nome a ser pesquisado: ";
+        << "Digite o ID a ser pesquisado: ";
 
-    cin >> nome;
+    cin >> key;
 
-    statisticSearch statistic = searchRbTree(&tree, nome);
+    statisticSearch statistic = searchRbTree(&tree, key);
 
     if (statistic.find)
     {
-        Review review = Review::readReviewBinary(statistic.result.position);
+        Review review = Review::readReviewBinary(statistic.result.pos);
         cout << endl << " --*-- Resultado --*--" << endl;
         cout << "Tempo de indexação: " << time_index << "s" << endl
             << "Tempo de busca: " << statistic.time_spent << "s" << endl
@@ -411,14 +409,14 @@ void MenuTrees::modTestRb()
         cout << "Tempo de indexação: " << time_index << "s" << endl
             << "Tempo de busca: " << statistic.time_spent << "s" << endl
             << "Numero de comparações: " << statistic.nComparer << endl;
-        cout << "Nenhum registro com esse nome foi encontrado na arvore" << endl;
+        cout << "Nenhum registro com esse ID foi encontrado na arvore" << endl;
     }
 }
 
 void MenuTrees::modTestB()
 {
     BTree tree = BTree(20);
-    string nome;
+    string key;
 
     double time_index = indexBTree(&tree, 50);
     cout << "-*- Mod teste -*-" << endl << endl;
@@ -426,15 +424,15 @@ void MenuTrees::modTestB()
     tree.print();
 
     cout << endl
-        << "Digite o nome a ser pesquisado: ";
+        << "Digite o ID a ser pesquisado: ";
 
-    cin >> nome;
+    cin >> key;
 
-    statisticSearch statistic = searchBTree(&tree, nome);
+    statisticSearch statistic = searchBTree(&tree, key);
 
     if (statistic.find)
     {
-        Review artist = Review::readReviewBinary(statistic.resultB.position);
+        Review review = Review::readReviewBinary(statistic.resultB.pos);
         cout << endl << " --*-- Resultado --*--" << endl;
         cout << "Tempo de indexação: " << time_index << "s" << endl
             << "Tempo de busca: " << statistic.time_spent << "s" << endl
@@ -448,6 +446,6 @@ void MenuTrees::modTestB()
         cout << "Tempo de indexação: " << time_index << "s" << endl
             << "Tempo de busca: " << statistic.time_spent << "s" << endl
             << "Numero de comparações: " << statistic.nComparer << endl;
-        cout << "Nenhum registro com esse nome foi encontrado na arvore" << endl;
+        cout << "Nenhum registro com esse ID foi encontrado na arvore" << endl;
     }
 }

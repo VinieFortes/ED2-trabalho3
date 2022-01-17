@@ -13,9 +13,6 @@ private:
     int t; // Grau mínimo do nó
     int m; // Grau máximo do nó
 
-//int comparacaoBusca;
-    //int insercaoBusca;
-
     BTreeNode* root; // Nó raiz - array de ponteiros para os filhos do nó
     string idIN;
 
@@ -24,9 +21,6 @@ public:
     BTreeNode* search(string k, int* count);
     void insert(infoB k);
     void print();
-
-    //int getComparacaoBusca() {return this->comparacaoBusca;};
-        //int getInsercaoBusca() {return this->insercaoBusca;};
 
     void indexReview(int n);
     string getIdIN();

@@ -101,6 +101,7 @@ Review* Review::readBinaryN(int n)
 
             data[i] = *review;
         }
+        //delete review;
         return data;
     }
     else
